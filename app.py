@@ -19,7 +19,7 @@ Technology Stack:
 - Werkzeug WSGI development server
 """
 
-from flask import Flask
+from flask import Flask, Response
 
 # Create Flask application instance
 # This replaces Node.js http.createServer() functionality
@@ -57,8 +57,15 @@ def handle_request(path):
     # Return response matching exact Node.js behavior:
     # - Same response body with newline character
     # - Status code 200 (HTTP OK)
-    # - Content-Type: text/plain header
-    return "Hello, World!\n", 200, {'Content-Type': 'text/plain'}
+    # - Content-Type: text/plain header (without charset)
+    # Use Response object to prevent Flask from adding charset=utf-8
+    response = Response(
+        response="Hello, World!\n",
+        status=200,
+        headers={'Content-Type': 'text/plain'},
+        mimetype=None  # Prevent Flask from inferring mimetype and adding charset
+    )
+    return response
 
 if __name__ == '__main__':
     """
